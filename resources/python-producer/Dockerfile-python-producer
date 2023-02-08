@@ -1,0 +1,16 @@
+FROM python:alpine3.17
+# ARG DATA_PATH
+#COPY $DATA_PATH /app/$DATA_PATH
+COPY data.zip /app/data.zip
+
+COPY requirements.txt /app/requirements.txt
+COPY upload-data-to-kafka.py /app/upload-data-to-kafka.py
+
+WORKDIR /app
+RUN mkdir data
+RUN unzip data.zip -d data
+RUN rm data.zip
+
+RUN pip install -r requirements.txt
+
+CMD python ./upload-data-to-kafka.py
