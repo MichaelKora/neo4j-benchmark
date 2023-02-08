@@ -1,0 +1,21 @@
+FROM --platform=linux/amd64 liftm/kafkacat:1.7.0 as kafkacat
+FROM --platform=linux/amd64 openjdk:8
+
+COPY --from=kafkacat / /usr
+
+RUN apt-get update ; \
+    apt-get upgrade -y ;\
+    apt-get install -y curl tree zip unzip wget
+
+COPY ./entrypoint.sh /tmp
+COPY ./contrib.sink.neo4j-current.json /tmp/contrib.sink.neo4j-current.json
+
+# Install Confluent Kafka CLI tools
+RUN wget --quiet http://packages.confluent.io/archive/5.5/confluent-5.5.1-2.12.zip && unzip confluent-5.5.1-2.12.zip && mv confluent-5.5.1 confluent && rm confluent-5.5.1-2.12.zip
+ENV PATH=$PATH:/confluent/bin
+
+RUN ["chmod", "+x", "/tmp/entrypoint.sh"]
+
+CMD /tmp/entrypoint.sh
+
+# ENTRYPOINT ["/tmp/entrypoint.sh"]

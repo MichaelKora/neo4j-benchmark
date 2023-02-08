@@ -1,0 +1,33 @@
+module "container-server" {
+  source = "../"
+
+  /* domain = "app.${var.domain}"
+  email  = var.email */
+
+  files = [
+    {
+      filename = "docker-compose.yaml"
+      content  = filebase64("${path.module}/assets/docker-compose.yaml")
+    }
+    /* ,
+    # https://docs.traefik.io/v2.0/middlewares/basicauth/#usersfile
+    {
+      filename = "users"
+      content  = filebase64("${path.module}/assets/users")
+    } */
+  ]
+
+  env = {
+    IMAGE                 = "containous/whoami:latest"
+    TRAEFIK_API_DASHBOARD = true
+  }
+
+  # custom instance configuration is possible through supplemental cloud-init config(s)
+  cloudinit_part = [
+    {
+      content_type = "text/cloud-config"
+      content      = local.cloudinit_configure_gcr
+    }
+  ]
+
+}

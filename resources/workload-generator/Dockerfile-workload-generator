@@ -1,0 +1,12 @@
+FROM python:alpine3.17
+
+COPY ./query-benchmark.py /app/query-benchmark.py
+
+COPY ./requirements.txt /app/requirements.txt
+
+WORKDIR /app
+RUN mkdir -p my-data
+
+RUN pip install -r requirements.txt
+
+CMD python ./query-benchmark.py
