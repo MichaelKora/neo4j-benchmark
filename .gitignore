@@ -57,7 +57,9 @@ testscript.py
 
 # GCP credentials
 credentials.json
-keys/
+keys/gcp_tf
+keys/gcp_tf.pub
+
 .bin*
 
 # data
@@ -70,3 +72,4 @@ neo4setup
 resources/python-producer/data.zip
 data.zip
 resources/workload-generator/my-data
+
