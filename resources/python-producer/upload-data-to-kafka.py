@@ -53,7 +53,7 @@ def produce_data(file_name):
 
 if __name__ == '__main__':
     inputs = ["pmc", "pubmed", "trials"]
-    workers = mp.cpu_count()
+    workers = 3
 
     with mp.Pool(workers) as pool:
         pool.map(produce_data, inputs)
