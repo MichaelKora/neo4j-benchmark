@@ -53,9 +53,7 @@ def produce_data(file_name):
 
 if __name__ == '__main__':
     inputs = ["pmc", "pubmed", "trials"]
-    print("Starting code!")
     workers = mp.cpu_count()
-    print(f"CPU count is: <{workers}>")
 
     with mp.Pool(workers) as pool:
         pool.map(produce_data, inputs)
