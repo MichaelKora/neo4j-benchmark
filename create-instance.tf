@@ -1,7 +1,7 @@
 resource "google_compute_instance" "neo4j" {
   name         = "sutneo4j"
   machine_type = "e2-standard-16"
-  zone         = "us-west1-b"
+  zone         = "us-west1-c"
   /* zone         = "europe-west3-c"
   machine_type = "e2-standard-16" */
 

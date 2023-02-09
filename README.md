@@ -8,7 +8,7 @@ Benchmark to investigate how to write cypher queries to receive a prompt respons
 
 ## Prerequisites
 
-    - Download the data zip file and store it under `resources/python-producer`
+    - Download the [data-zip](https://tubcloud.tu-berlin.de/f/3518814196) file and store it under `resources/python-producer`
     - Generate a pair of ssh keys called `gcp_tf/gcp_tf.pub` and store them under the directory named `keys` in the root dir.
 
 ## Create instance
@@ -27,19 +27,33 @@ Once the instance is created run the following commands
 
 cd /tmp
 sudo cp kafka-client/contrib.sink.neo4j-before.json kafka-client/contrib.sink.neo4j-current.json
-sudo docker compose -f docker-compose-first-run.yaml up -d --build --force-recreate
+sudo mv docker-compose-first-run.yaml docker-compose.yaml
+sudo docker compose up -d --build --force-recreate
 ```
 
 ## Destroy part 1 and deploy part 2
 
-```shell
+Once the container `connector-benchmark` terminated, run those commands from another window
 
+```shell
 cd /tmp
-sudo chmod +x scheduler-script.sh
-sudo bash scheduler-script.sh
+
+sudo rm kafka-client/contrib.sink.neo4j-current.json
+sudo cp kafka-client/contrib.sink.neo4j-after.json kafka-client/contrib.sink.neo4j-current.json
+
+sudo mv my-data/connector-results-latest.csv my-data/connector-results-before.csv
+
+sudo docker compose down
+
+sudo mv docker-compose.yaml docker-compose-first-run.yaml
+sudo mv  docker-compose-second-run.yaml docker-compose.yaml
+
+sudo docker system prune
+sudo docker compose up -d --build --force-recreate
+
 ```
 
 ## Results
 
-All containers will be shut down once the benchmark is over.
+Wait until the container `workload-generator` terminates.
 The results are stored under the measurements directory.

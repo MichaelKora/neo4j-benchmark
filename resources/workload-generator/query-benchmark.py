@@ -3,9 +3,9 @@ import csv
 import time
 
 # Initialize connection to database
-# driver = GraphDatabase.driver('bolt://  neo4j:7687', auth=('neo4j', 'connect'))
-driver = GraphDatabase.driver(
-    'neo4j://localhost:7687', auth=('neo4j', 'connect'))
+driver = GraphDatabase.driver('bolt://  neo4j:7687', auth=('neo4j', 'connect'))
+# driver = GraphDatabase.driver(
+#     'neo4j://localhost:7687', auth=('neo4j', 'connect'))
 
 
 # which entity of a specific type appear the most in both pmc and pubmed
@@ -58,26 +58,21 @@ for query in queries:
         with driver.session() as session:
 
             # tracks the start time
-            # st = time.perf_counter() # ns
             st = time.time()  # secondss
 
             # run query
             info = session.run(query)
             g = info.graph()
-            # tracks the end time
-            # et = time.perf_counter()
+
             et = time.time()
 
-            # find elapsed time in seconds
-            # duration = (et - st) * 10 ** 6
-            # duration = e - st # "ns"
             duration = et - st  # "seconds"
-            print(f"=======duration: {duration}")
+
 
             results_befpre_optimization.append([query_no, iteration, duration])
     query_no += 1
 
-with open('my-data/time_tracker_before_optimization.csv', 'w', newline='') as file:
+with open('../../time_tracker_before_optimization.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(results_befpre_optimization)
 
@@ -117,6 +112,6 @@ for query in queries:
 
             results_after_optimization.append([query_no, iteration, duration])
     query_no += 1
-with open('my-data/time_tracker_after_optimization.csv', 'w', newline='') as file:
+with open('../../time_tracker_after_optimization.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(results_after_optimization)

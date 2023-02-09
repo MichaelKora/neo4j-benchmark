@@ -73,3 +73,4 @@ resources/python-producer/data.zip
 data.zip
 resources/workload-generator/my-data
 
+resources/docker-compose.yaml

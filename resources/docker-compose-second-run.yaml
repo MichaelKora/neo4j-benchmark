@@ -161,7 +161,7 @@ services:
     networks:
       - kafka-network
     volumes:
-      - $PWD/measurements/connetor-benchmark:/tmp/my-data
+      - ./measurements/connetor-benchmark:/tmp/my-data
 
   workload-generator:
     depends_on:
@@ -172,7 +172,7 @@ services:
       context: ./workload-generator
       dockerfile: ./Dockerfile-workload-generator
     volumes:
-      - $PWD/measurements/workload-generator:/app/my-data
+      - ./measurements/workload-generator:/app/my-data
     networks:
       - kafka-network
 
