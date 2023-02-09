@@ -17,5 +17,3 @@ ENV PATH=$PATH:/confluent/bin
 RUN ["chmod", "+x", "/tmp/entrypoint.sh"]
 
 CMD /tmp/entrypoint.sh
-
-# ENTRYPOINT ["/tmp/entrypoint.sh"]

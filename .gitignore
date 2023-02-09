@@ -69,3 +69,4 @@ env-neo4j-py
 neo4setup
 resources/python-producer/data.zip
 data.zip
+resources/workload-generator/my-data

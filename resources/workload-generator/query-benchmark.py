@@ -3,9 +3,9 @@ import csv
 import time
 
 # Initialize connection to database
-driver = GraphDatabase.driver('bolt://  neo4j:7687', auth=('neo4j', 'connect'))
-# driver = GraphDatabase.driver(
-#     'neo4j://localhost:7687', auth=('neo4j', 'connect'))
+# driver = GraphDatabase.driver('bolt://  neo4j:7687', auth=('neo4j', 'connect'))
+driver = GraphDatabase.driver(
+    'neo4j://localhost:7687', auth=('neo4j', 'connect'))
 
 
 # which entity of a specific type appear the most in both pmc and pubmed
@@ -52,8 +52,8 @@ queries.append(query4)
 
 results_befpre_optimization = [
     ["Query ID", "Itteration", "Duration in seconds"]]
-query_no = 1
 for query in queries:
+    query_no = 1
     for iteration in range(1, 20):
         with driver.session() as session:
 
@@ -64,7 +64,6 @@ for query in queries:
             # run query
             info = session.run(query)
             g = info.graph()
-
             # tracks the end time
             # et = time.perf_counter()
             et = time.time()
@@ -73,6 +72,7 @@ for query in queries:
             # duration = (et - st) * 10 ** 6
             # duration = e - st # "ns"
             duration = et - st  # "seconds"
+            print(f"=======duration: {duration}")
 
             results_befpre_optimization.append([query_no, iteration, duration])
     query_no += 1
@@ -97,8 +97,8 @@ with driver.session() as session:
 
 results_after_optimization = [
     ["Query ID", "Itteration", "Duration in seconds"]]
-query_no = 1
 for query in queries:
+    query_no = 1
     for iteration in range(1, 20):
         with driver.session() as session:
 
@@ -113,6 +113,7 @@ for query in queries:
             et = time.time()
 
             duration = et - st
+            print(f"--------duration: {duration}")
 
             results_after_optimization.append([query_no, iteration, duration])
     query_no += 1
