@@ -3,6 +3,7 @@ import csv
 import time
 
 # Initialize connection to database
+# driver = GraphDatabase.driver('neo4j://<IP>:7687', auth=('neo4j', 'connect'))
 driver = GraphDatabase.driver('bolt://  neo4j:7687', auth=('neo4j', 'connect'))
 # driver = GraphDatabase.driver(
 #     'neo4j://localhost:7687', auth=('neo4j', 'connect'))
@@ -14,17 +15,13 @@ MATCH (pmc:Pmc)-[:MENTIONS]->(e:Entity)<-[:MENTIONS]-(pub:Pubmed)
 WITH e.type AS Type, count(*) AS Count
 RETURN Type, Count
 ORDER BY Count DESC
-LIMIT 10000
 '''
-
-# top 10 most mentioned entities
 
 query2 = '''
 MATCH (n)-[:MENTIONS]->(e:Entity)
 WITH e.name AS Name, count(*) AS Count
 RETURN Name, Count
 ORDER BY Count DESC
-LIMIT 10
 '''
 
 # the most mentioned entity type
@@ -32,7 +29,6 @@ query3 = '''
 MATCH (n) -[:MENTIONS]->(e:Entity)
 RETURN e.type AS Type, count(*) AS Count
 ORDER BY Count DESC
-LIMIT 1
 '''
 
 # Top 10000 of entity names mentioned in both pmc and pubmed
@@ -41,7 +37,6 @@ MATCH (pmc:Pmc)-[:MENTIONS]->(e:Entity)<-[:MENTIONS]-(pub:Pubmed)
 WITH e.name AS Name, count(*) AS Count
 RETURN Name, Count
 ORDER BY Count DESC
-LIMIT 10000
 '''
 
 queries = []
@@ -52,8 +47,8 @@ queries.append(query4)
 
 results_befpre_optimization = [
     ["Query ID", "Itteration", "Duration in seconds"]]
+query_no = 1
 for query in queries:
-    query_no = 1
     for iteration in range(1, 20):
         with driver.session() as session:
 
@@ -72,46 +67,7 @@ for query in queries:
             results_befpre_optimization.append([query_no, iteration, duration])
     query_no += 1
 
-with open('../../time_tracker_before_optimization.csv', 'w', newline='') as file:
+with open('./my-data/time_tracker_before_optimization.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(results_befpre_optimization)
 
-entity_name_range_index = '''
-CREATE INDEX entity_name_range_index IF NOT EXISTS
-FOR (e:Entity) ON (e.name)
-'''
-
-entity_type_range_index = '''
-CREATE INDEX entity_type_range_index IF NOT EXISTS
-FOR (e:Entity) ON (e.type)
-'''
-
-with driver.session() as session:
-    session.run(entity_name_range_index)
-    session.run(entity_type_range_index)
-
-results_after_optimization = [
-    ["Query ID", "Itteration", "Duration in seconds"]]
-for query in queries:
-    query_no = 1
-    for iteration in range(1, 20):
-        with driver.session() as session:
-
-            # get the start time
-            st = time.time()
-
-            # run query
-            info = session.run(query)
-            g = info.graph()
-
-            # get the end time
-            et = time.time()
-
-            duration = et - st
-            print(f"--------duration: {duration}")
-
-            results_after_optimization.append([query_no, iteration, duration])
-    query_no += 1
-with open('../../time_tracker_after_optimization.csv', 'w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(results_after_optimization)

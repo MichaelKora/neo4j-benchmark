@@ -65,12 +65,16 @@ keys/gcp_tf.pub
 # data
 Setup
 terraform/resources/python-producer/data
-data
+data.zip
 .vscode
 env-neo4j-py
 neo4setup
 resources/python-producer/data.zip
-data.zip
+# data.zip
 resources/workload-generator/my-data
 
 resources/docker-compose.yaml
+contrib.sink.neo4j-current.json
+provider.tf
+*credentials*
+create-instance.tf

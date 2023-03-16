@@ -1,19 +1,19 @@
 {
-    "name": "Neo4jSinkConnector",
-    "config": {
-      "topics": "trials, pubmed, pmc",
-      "connector.class": "streams.kafka.connect.sink.Neo4jSinkConnector",
-      "errors.retry.timeout": "-1",
-      "errors.retry.delay.max.ms": "1000",
-      "errors.tolerance": "all",
-      "errors.log.enable": true,
-      "errors.log.include.messages": true,
-      "neo4j.server.uri": "bolt://neo4j:7687",
-      "neo4j.authentication.basic.username": "neo4j",
-      "neo4j.authentication.basic.password": "connect",
-      "neo4j.encryption.enabled": false,
-      "neo4j.topic.cypher.trials": "MERGE(t:Trial{id: event.id}) WITH event, t UNWIND event.entity_counts AS entity_count   MERGE(e:Entity{id: entity_count.key}) SET e.name = entity_count.name, e.type = entity_count.type WITH entity_count, t, e CALL apoc.merge.relationship(t, 'MENTIONS', {section: entity_count.section}, {count: entity_count.count}, e) YIELD rel RETURN rel",
-      "neo4j.topic.cypher.pubmed": "MERGE(p:Pubmed{id: event.id}) WITH event, p UNWIND event.entity_counts AS entity_count MERGE(e:Entity{id: entity_count.key}) SET e.name = entity_count.name, e.type = entity_count.type WITH entity_count, p, e CALL apoc.merge.relationship(p, 'MENTIONS', {section: entity_count.section}, {count: entity_count.count}, e) YIELD rel RETURN rel",
-      "neo4j.topic.cypher.pmc": "MERGE(pmc:Pmc{id: event.id}) WITH event, pmc UNWIND event.entity_counts AS entity_count MERGE(e:Entity{id: entity_count.key}) SET e.name = entity_count.name, e.type = entity_count.type WITH entity_count, pmc, e CALL apoc.merge.relationship(pmc, 'MENTIONS', {section: entity_count.section}, {count: entity_count.count}, e) YIELD rel RETURN rel"
-    }
+  "name": "Neo4jSinkConnector",
+  "config": {
+    "topics": "trials, pubmed, pmc",
+    "connector.class": "streams.kafka.connect.sink.Neo4jSinkConnector",
+    "errors.retry.timeout": "-1",
+    "errors.retry.delay.max.ms": "1000",
+    "errors.tolerance": "all",
+    "errors.log.enable": true,
+    "errors.log.include.messages": true,
+    "neo4j.server.uri": "bolt://neo4j:7687",
+    "neo4j.authentication.basic.username": "neo4j",
+    "neo4j.authentication.basic.password": "connect",
+    "neo4j.encryption.enabled": false,
+    "neo4j.topic.cypher.trials": "MERGE(t:Trial{id: event.id}) WITH event, t UNWIND event.entity_counts AS entity_count   MERGE(e:Entity{id: entity_count.key}) SET e.name = entity_count.name, e.type = entity_count.type WITH entity_count, t, e CALL apoc.merge.relationship(t, 'MENTIONS', {section: entity_count.section}, {count: entity_count.count}, e) YIELD rel RETURN rel",
+    "neo4j.topic.cypher.pubmed": "MERGE(p:Pubmed{id: event.id}) WITH event, p UNWIND event.entity_counts AS entity_count MERGE(e:Entity{id: entity_count.key}) SET e.name = entity_count.name, e.type = entity_count.type WITH entity_count, p, e CALL apoc.merge.relationship(p, 'MENTIONS', {section: entity_count.section}, {count: entity_count.count}, e) YIELD rel RETURN rel",
+    "neo4j.topic.cypher.pmc": "MERGE(pmc:Pmc{id: event.id}) WITH event, pmc UNWIND event.entity_counts AS entity_count MERGE(e:Entity{id: entity_count.key}) SET e.name = entity_count.name, e.type = entity_count.type WITH entity_count, pmc, e CALL apoc.merge.relationship(pmc, 'MENTIONS', {section: entity_count.section}, {count: entity_count.count}, e) YIELD rel RETURN rel"
   }
+}

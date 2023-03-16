@@ -43,17 +43,17 @@ def produce_data(file_name):
     the_broker = 'kafka:9092'
     the_topic = file_name
     producer = Producer(the_broker, the_topic)
-    size = 500000
-    json_list = json_list[0:size]
+    size = 1000000
+    sub_json_list = json_list[0:size]
 
-    for line in json_list:
+    for line in sub_json_list:
         data = json.loads(line)
         producer.publish(data)
 
 
 if __name__ == '__main__':
     inputs = ["pmc", "pubmed", "trials"]
-    workers = 3
+    workers = mp.cpu_count()
 
     with mp.Pool(workers) as pool:
         pool.map(produce_data, inputs)
