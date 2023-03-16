@@ -1,7 +1,7 @@
 resource "google_compute_instance" "neo4j" {
   name         = "sutneo4j"
   machine_type = "e2-standard-16"
-  zone         = "us-central1-f"
+  zone         = "us-west1-c"
   /* zone         = "europe-west3-c"
   machine_type = "e2-standard-16" */
 
@@ -24,8 +24,8 @@ resource "google_compute_instance" "neo4j" {
   }
 
   provisioner "file" {
-    source      = "resources"
-    destination = "/tmp"
+    source      = "resources/"
+    destination = "/tmp/"
 
     connection {
       type        = "ssh"
@@ -37,7 +37,6 @@ resource "google_compute_instance" "neo4j" {
   }
   tags                    = ["sut-vm"]
   metadata_startup_script = <<SCRIPT
-    mkdir neo4j-dir
     export DEBIAN_FRONTEND=noninteractive
     sudo apt update
     sudo apt upgrade -y
@@ -50,7 +49,14 @@ resource "google_compute_instance" "neo4j" {
 
     sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
-    sudo chmod -R 777 /tmp/
+
+    cd /tmp
+    touch ahahha.txt
+    sudo docker-compose up -d
+
+    sudo mkdir -p /tmp/csb/test
+    sudo touch /tmp/csb/test/hello.txt
+    sudo echo "Hello World!" >> /tmp/csb/test/hello.txt
     SCRIPT
 }
 
