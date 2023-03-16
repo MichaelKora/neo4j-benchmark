@@ -1,5 +1,5 @@
 provider "google" {
   credentials = file("credentials.json")
-  project     = "bakdata-terraform-testing"
-  /* region      = "europe-west3" */
+  project     = "neo4j-benchmark-372917"
+  region      = "europe-west3"
 }
