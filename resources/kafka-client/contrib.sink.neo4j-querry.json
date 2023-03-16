@@ -18,16 +18,4 @@
     }
   }
 
-  CREATE CONSTRAINT IF NOT EXISTS FOR (t:Trial) require t.id IS UNIQUE
-  CREATE CONSTRAINT IF NOT EXISTS FOR (p:Pubmed) require p.id IS UNIQUE
-  CREATE CONSTRAINT IF NOT EXISTS FOR (pmc:Pmc) require pmc.id IS UNIQUE
-
-entity_name_range_index = '''
-CREATE INDEX entity_name_range_index IF NOT EXISTS
-FOR (e:Entity) ON (e.name)
-'''
-
-entity_type_range_index = '''
-CREATE INDEX entity_type_range_index IF NOT EXISTS
-FOR (e:Entity) ON (e.type)
-'''
+  
