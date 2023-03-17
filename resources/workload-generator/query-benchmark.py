@@ -67,7 +67,6 @@ for query in queries:
             results_befpre_optimization.append([query_no, iteration, duration])
     query_no += 1
 
-with open('./my-data/time_tracker_before_optimization.csv', 'w', newline='') as file:
+with open('./my-data/time_tracker_latest.csv', 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(results_befpre_optimization)
-
