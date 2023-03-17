@@ -19,41 +19,138 @@ Create the new GCP VM by running
 terraform apply
 ```
 
-## Deploy part 1
+## Deploy run 1
 
 Once the instance is created run the following commands
 
 ```shell
+sudo chmod -R 777 /tmp
+cd /tmp/resources
 
-cd /tmp
 sudo cp kafka-client/contrib.sink.neo4j-before.json kafka-client/contrib.sink.neo4j-current.json
-sudo mv docker-compose-first-run.yaml docker-compose.yaml
-sudo docker compose up -d --build --force-recreate
+sudo docker-compose up -d
 ```
 
-## Destroy part 1 and deploy part 2
-
-Once the container `connector-benchmark` terminated, run those commands from another window
+Once the workload-generator service of the previous run terminates, stop the deployment by running:
 
 ```shell
-cd /tmp
-
-sudo rm kafka-client/contrib.sink.neo4j-current.json
-sudo cp kafka-client/contrib.sink.neo4j-after.json kafka-client/contrib.sink.neo4j-current.json
-
-sudo mv my-data/connector-results-latest.csv my-data/connector-results-before.csv
-
 sudo docker compose down
-
-sudo mv docker-compose.yaml docker-compose-first-run.yaml
-sudo mv  docker-compose-second-run.yaml docker-compose.yaml
-
-sudo docker system prune
-sudo docker compose up -d --build --force-recreate
-
 ```
 
-## Results
+## Deploy run 2
 
-Wait until the container `workload-generator` terminates.
-The results are stored under the measurements directory.
+Before starting the second run, make sure to change the name of the old measurements, then update the Kafka connector configuration.
+
+```shell
+cd /tmp/resources/measurements/
+mv  connetor-benchmark/connector-results-latest.csv connetor-benchmark/connector-results-run1.csv
+
+mv workload-generator/time_tracker_latest.csv workload-generator/time_tracker_run1.csv
+
+cd /tmp/resources/
+sudo cp kafka-client/contrib.sink.neo4j-parallelize.json  kafka-client/contrib.sink.neo4j-current.json
+sudo docker-compose up -d --build --force-recreate
+```
+
+## Deploy run 3
+
+Once the workload-generator service of the previous run terminates, stop the deployment by running:
+
+```shell
+sudo docker compose down
+```
+
+Before starting this run, make sure to change the name of the old measurements, then update the Kafka connector configuration.
+
+```shell
+cd /tmp/resources/measurements/
+mv  connetor-benchmark/connector-results-latest.csv connetor-benchmark/connector-results-run2.csv
+
+mv workload-generator/time_tracker_latest.csv workload-generator/time_tracker_run2.csv
+
+cd /tmp/resources/
+sudo cp kafka-client/contrib.sink.neo4j-poll.json kafka-client/contrib.sink.neo4j-current.json
+sudo docker-compose up -d --build --force-recreate
+```
+
+## Deploy run 4
+
+Once the workload-generator service of the previous run terminates, stop the deployment by running:
+
+```shell
+sudo docker compose down
+```
+
+Before starting this run, make sure to change the name of the old measurements, then update the Kafka connector configuration.
+
+```shell
+cd /tmp/resources/measurements/
+mv  connetor-benchmark/connector-results-latest.csv connetor-benchmark/connector-results-run3.csv
+
+mv workload-generator/time_tracker_latest.csv workload-generator/time_tracker_run3.csv
+
+cd /tmp/resources/
+sudo cp kafka-client/contrib.sink.neo4j-querry.json kafka-client/contrib.sink.neo4j-current.json
+sudo docker-compose up -d --build --force-recreate
+```
+
+Once neo4j starts, go on the UI on port 7474:
+and run the following queries to create some constraints (user: neo4j, PWD: connect):
+
+```python
+CREATE CONSTRAINT IF NOT EXISTS FOR (t:Trial) require t.id IS UNIQUE
+
+CREATE CONSTRAINT IF NOT EXISTS FOR (p:Pubmed) require p.id IS UNIQUE
+
+CREATE CONSTRAINT IF NOT EXISTS FOR (pmc:Pmc) require pmc.id IS UNIQUE
+```
+
+## Deploy run 5
+
+Once the workload-generator service of the previous run terminates, stop the deployment by running:
+
+```shell
+sudo docker compose down
+```
+
+Before starting this run, make sure to change the name of the old measurements, then update the Kafka connector configuration.
+
+```shell
+cd /tmp/resources/measurements/
+mv  connetor-benchmark/connector-results-latest.csv connetor-benchmark/connector-results-run4.csv
+
+mv workload-generator/time_tracker_latest.csv workload-generator/time_tracker_run4.csv
+
+cd /tmp/resources/
+sudo docker-compose up -d --build --force-recreate
+```
+
+Once neo4j starts, go on the UI on port 7474:
+and run the following queries to create some indexes (user: neo4j, PWD: connect):
+
+```python
+CREATE INDEX entity_name_range_index IF NOT EXISTS
+FOR (e:Entity) ON (e.name)
+
+CREATE INDEX entity_type_range_index IF NOT EXISTS
+FOR (e:Entity) ON (e.type)
+```
+
+## End
+
+Once the workload-generator service of the previous run terminates, stop the deployment by running:
+
+```shell
+sudo docker compose down
+```
+
+```shell
+cd /tmp/resources/measurements/
+mv  connetor-benchmark/connector-results-latest.csv connetor-benchmark/connector-results-run5.csv
+
+mv workload-generator/time_tracker_latest.csv workload-generator/time_tracker_run5.csv
+
+cd /tmp/resources/
+
+sudo docker-compose up -d --build --force-recreate
+```
